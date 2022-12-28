@@ -24,6 +24,13 @@ export class AppService {
         map((data) => {
           return data.data.fi;
         }),
+        map((items) => {
+          const finalItems = items.map((item) => ({
+            timestamp: new Date(item.timestamp * 1000),
+            pricePerKwh: item.price / 1000,
+          }));
+          return finalItems;
+        }),
       )
       .pipe(
         catchError(() => {
