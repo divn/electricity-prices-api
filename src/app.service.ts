@@ -20,15 +20,16 @@ export class AppService {
         `https://dashboard.elering.ee/api/nps/price?start=${starttime}&end=${endtime}`,
       )
       .pipe(
-        map((response) => response.data),
-        map((data) => {
-          return data.data.fi;
+        map((response) => {
+          return response.data.data.fi;
         }),
-        map((items) => {
-          const finalItems = items.map((item) => ({
-            timestamp: new Date(item.timestamp * 1000),
-            pricePerKwh: item.price / 1000,
-          }));
+        map((items: Array<object>) => {
+          const finalItems = items.map(
+            (item: { timestamp: number; price: number }) => ({
+              timestamp: new Date(item.timestamp * 1000),
+              pricePerKwh: item.price / 1000,
+            }),
+          );
           return finalItems;
         }),
       )

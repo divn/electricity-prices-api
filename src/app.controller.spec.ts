@@ -18,7 +18,7 @@ describe('AppController', () => {
 
   describe('/api/TodayAndTomorrow/', () => {
     it('should return prices for today and tomorrow', async () => {
-      expect(await appController.getTodayAndTomorrow('fi')).toBe(Promise<any>);
+      expect(await appController.getTodayAndTomorrow('fi')).toBe(Array);
     });
   });
 });

@@ -1,5 +1,6 @@
 import {
   CacheInterceptor,
+  CacheTTL,
   Controller,
   Get,
   Param,
@@ -12,8 +13,9 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @CacheTTL(60 * 15)
   @Get(`/api/TodayAndTomorrow/:country`)
-  getTodayAndTomorrow(@Param() params: string): any {
+  getTodayAndTomorrow(@Param() params: string): object {
     return this.appService.getTodayAndTomorrow(params);
   }
 }
