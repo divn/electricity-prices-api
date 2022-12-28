@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get(`/api/TodayAndTomorrow/:country`)
-  getTodayAndTomorrow(@Param() params): string {
+  getTodayAndTomorrow(@Param() params: string): any {
     return this.appService.getTodayAndTomorrow(params);
   }
 }

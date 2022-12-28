@@ -1,28 +1,34 @@
-// @ts-nocheck
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
-import { map } from 'rxjs';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { catchError, map } from 'rxjs';
 
 @Injectable()
 export class AppService {
-  constructor(private httpService: HttpService) {}
+  constructor(private readonly http: HttpService) {}
 
-  getTodayAndTomorrow(_params): string {
-    let start = new Date(new Date().setHours(23, 59, 59, 999));
+  async getTodayAndTomorrow(_params: string): Promise<any> {
+    const start = new Date(new Date().setHours(23, 59, 59, 999));
     start.setDate(start.getDate() - 1);
-    start = start.toISOString();
+    const starttime = start.toISOString();
 
-    let end = new Date(new Date().setHours(23, 59, 59, 999));
+    const end = new Date(new Date().setHours(23, 59, 59, 999));
     end.setDate(end.getDate() + 1);
-    end = end.toISOString();
+    const endtime = end.toISOString();
 
-    return this.httpService
+    return this.http
       .get(
-        `https://dashboard.elering.ee/api/nps/price?start=${start}&end=${end}`,
+        `https://dashboard.elering.ee/api/nps/price?start=${starttime}&end=${endtime}`,
       )
       .pipe(
         map((response) => response.data),
-        map((data) => data.data.fi),
+        map((data) => {
+          return data.data.fi;
+        }),
+      )
+      .pipe(
+        catchError(() => {
+          throw new ForbiddenException('API not available');
+        }),
       );
   }
 }
